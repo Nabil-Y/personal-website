@@ -1,0 +1,174 @@
+---
+  title: "How to build a portfolio with Next.js and MDX"
+  slug: "how-to-build-a-portfolio"
+  date: "2022-09-02"
+  description: "The thought process and technologies used to build this blog / portfolio."
+  image: "/static/blog/how-to-build-a-portfolio/developers.png"
+---
+
+![Developers thinking in front of a screen](/static/blog/how-to-build-a-portfolio/developers.png)
+
+## Where to start ?
+
+Building a **personal project** from scratch is hard if you don't know where to start. I'll help by telling you my thought process behind this website's creation.
+
+First, define what you want to do. For this **portfolio**, there was two main use cases:
+
+1. Showcasing my **projects**
+1. Writing **blog articles**
+
+Each one has many sub-topics. How to show the **projects**? How to store the data ? What framework to use ? Can I add a like button ? Add a view count ? Should I use a CMS ? A self-hosted database ? Markdown ?
+
+At first I was getting lost trying to figure out what to do or what to use, what might be useful for the future. Then I stumbled upon the **YAGNI** principle.
+
+```ts:YAGNI.dev
+const YAGNI = "Y'Aint Gonna Need It";
+```
+
+Short. Clear. Us developpers tend to implement features or write code that we might need later.
+
+And more often than not, it ends up being unused. Makes us loose so much time.
+
+That's where the **YAGNI** comes in. Only write code that you need **now**. Might seem counter-intuitive but it's very useful.
+
+Code a feature when you need it, not before. It saved me so much **time** to make a first version of this **portfolio**.
+
+## The tech
+
+Next comes the time to think about what technology is best suited for your **project**.
+
+Even before starting I knew I'd use TypeScript because it makes your code self-documented and way more reliable than JavaScript (Please use TypeScript).
+
+Also TailwindCSS just because I'm a big fan. It makes the styling part a pleasure with component frameworks like React.
+
+```js:./tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  darkMode: "class",
+  theme: {
+    extend: {
+      fontFamily: {
+        sora: ["'Sora'", "sans-serif"],
+      },
+      colors: {
+        // colors
+      },
+      animation: {
+        appear: "appearance 0.2s linear",
+      },
+      keyframes: {
+        appearance: {
+          "0%": { transform: "translateY(16px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+      },
+    },
+  },
+  plugins: [require("@tailwindcss/typography")],
+};
+
+```
+
+For a blog, what comes to mind first is using a CMS. As I wanted to build something myself, the idea was quickly discarded.
+
+The idea of a dedicated headless CMS was appealing but not selected. In the end, I chose **Next.js** for its Static Site Generation (SSG).
+
+Also the blog will not be hosted on a blogging platform so I need SEO to expose my articles to search engines. **Next.js** has built in SEO tools so that's a big plus.
+
+## The blog
+
+Static Site Generation is one of the most optimized way to create blogs because it's **blazingly fast** and the data doesn't change much. It makes your GitHub repo act like a free headless CMS.
+
+All my **blog posts** are written in the `/data/posts` folder and the content is scraped thanks to Node's `fs` module and `gray-matter`.
+
+```ts:./libs/posts.ts
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import readingTime from "reading-time";
+
+const postsDirectory = path.join(process.cwd(), "data", "posts");
+
+export const getAllPostsSorted = () => {/* code */ };
+
+export const getAllPostsPaths = () => { /* code */ };
+
+export const getPostData = async (slug: string) => {
+  const filePath = path.join(postsDirectory, `${slug}.mdx`);
+  const fileContent = fs.readFileSync(filePath, "utf8");
+  const matterResult = matter(fileContent);
+  const readTime = readingTime(matterResult.content).text;
+
+  return {
+    meta: matterResult.data,
+    mdx: matterResult.content,
+    readTime,
+  };
+};
+```
+
+The gray-matter module allows to parse text files and separate meta data, written in a YAML format at the top, and the main content.
+
+For the **articles**, I chose **MDX** instead of simple markdown for three main reasons. First was to be able to use the built-in **Next.js** Image component to optimize automatically article images.
+
+Second, I was curious about **MDX** and wanted to learn by using it in a **project**. The quickest way to understand new technologies.
+
+Last reason was that I could import custom React components and make future articles more interactive (not really **YAGNI** but still, I learned a lot so it was worth it).
+
+```md:./data/posts/how-to-build-a-portfolio.mdx
+---
+  title: "How to build a portfolio"
+  slug: "how-to-build-a-portfolio"
+  date: "2022-09-02"
+  description: "Discover how I built my blog/portfolio."
+  image: "/static/blog/why-this-blog/blogging.png"
+---
+
+## Where to start ?
+
+Building a personal project from scratch is hard ...
+```
+
+## The portfolio
+
+For the **project**, I wanted something really simple and didn't want to spend a lot of time finding a solution to store it in a database or reuse the original scraping like the `fs module` so I opted for quickest solution.
+
+Yes. A simple array. An easy method but one that will have limitations in readability when I have many, many projects. Still, It works great now so there is no need to overcomplicate things.
+
+```ts:./types/types.ts
+// Array of Project objects
+
+interface Project {
+  repoLink: string;
+  demoLink: string;
+  title: string;
+  tags: string[];
+  description?: string;
+  imgLink?: string;
+}
+```
+
+The `description` and `imgLink` keys are optional so that I can reuse the component and omit them in the Home Page. Thinking about reusability is key in component framework.
+
+## Template
+
+As a contribution to open source, I built a template so that you can have your **blog / portfolio** like mine set up in just a few minutes.
+
+Here are the links:
+
+1. [Template repository](https://github.com/Nabil-Y/portfolio-template)
+1. [Live Demo](https://portfolio-template-amber.vercel.app/)
+
+To get started, follow the instructions in the repository's Readme. Please star the project if you found it helpful.
+
+![Word cloud with "Open source" theme](/static/blog/how-to-build-a-portfolio/open-source.png)
+
+## Follow me or send a message on
+
+- [GitHub](https://github.com/Nabil-Y)
+- [Twitter](https://twitter.com/nabil_io)
+- [Linkedin](https://www.linkedin.com/in/nabil-yassine-0a5262226/)

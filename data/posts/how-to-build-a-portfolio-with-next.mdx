@@ -1,6 +1,6 @@
 ---
-  title: "How to build a portfolio"
-  slug: "how-to-build-a-portfolio"
+  title: "How to build a portfolio with Next"
+  slug: "how-to-build-a-portfolio-with-next"
   date: "2022-09-02"
   description: "The thought process and technologies used to build this blog / portfolio."
   image: "/static/blog/how-to-build-a-portfolio/developers.png"
@@ -10,9 +10,11 @@
 
 ## Where to start ?
 
-Building a **personal project** from scratch is hard if you don't know where to start. I'll help by telling you my thought process behind this website's creation.
+Building a **personal project** from scratch is hard if you don't know where to start.
 
-First, define what you want to do. For this **portfolio**, there was two main use caes:
+I'll try to help and tell you my thought process behind this website's creation.
+
+First, defining what you want to do. For this **portfolio**, there were two main needs:
 
 1. Showcase **projects**
 1. Write **blog articles**
@@ -21,9 +23,9 @@ Each one has many sub-topics. How to show the **projects**? How to store the dat
 
 At first I was getting lost trying to figure out what to do or what to use, what might be useful for the future. Then I stumbled upon the **YAGNI** principle.
 
-```ts
-const YAGNI = "Y'Aint Gonna Need It";
-```
+> YAGNI
+>
+> Y'Aint Gonna Need It
 
 Short and clear. Us developpers tend to implement features or write code that we might need later.
 
@@ -31,15 +33,17 @@ And more often than not, it ends up being unused. So much time is being wasted.
 
 That's where the **YAGNI** principle comes in. Only write code that you need **now**. Might seem counter-intuitive but it's very useful.
 
-Code a feature when you need it, not before. It saved me so much **time** to make a first version of this **portfolio**.
+It saved me so much **time** to make a first version of this **portfolio**.
+
+Remember this: Code a feature when you need it, not before.
 
 ## The tech
 
 Next comes the time to think about what technology is best suited for your **project**.
 
-Even before starting I knew I'd use TypeScript because it makes your code self-documented and way more reliable than JavaScript.
+Even before starting I knew I'd use [TypeScript](https://www.typescriptlang.org/) because it makes your code self-documented and way more reliable than JavaScript.
 
-Also TailwindCSS just because I'm a big fan. It makes the styling part a pleasure with component frameworks like React.
+Also [TailwindCSS](https://tailwindcss.com/) just because I'm a big fan. It makes the styling part a pleasure with component frameworks like React.
 
 It may or may not be the main topic of a future blog post.
 
@@ -75,11 +79,11 @@ module.exports = {
 
 ```
 
-For a blog, what comes to mind first is using a CMS. As I wanted to build something myself, this was quickly discarded.
+For a blog, what comes to mind first is using a [CMS](https://en.wikipedia.org/wiki/Content_management_system).
 
-The idea of using some dedicated headless CMS like Sanity or Strapi was appealing but I wanted to build something simple by myself...
+The idea of using a dedicated headless CMS like Sanity or Strapi was appealing but I wanted to build something simple by myself...
 
-Then I chose **Next.js** for its Static Site Generation (SSG) feature and the many optimisations it comes with.
+Then I chose [**Next.js**](https://nextjs.org/) for its Static Site Generation (SSG) feature and the many optimisations it comes with.
 
 Also the **blog** will not be hosted on a blogging platform so I need SEO to expose my articles to search engines.
 
@@ -87,9 +91,11 @@ Also the **blog** will not be hosted on a blogging platform so I need SEO to exp
 
 ## The blog
 
-Static Site Generation is one of the most optimized way to create blogs because it's **blazingly fast** and the data doesn't change much.
+Static Site Generation is one of the most optimized way to create blogs because the data doesn't change much.
 
-With the proper setup, your GitHub repo can act like a free and easy to use headless CMS.
+As a result, each page has its own HTML file created and filled with data, ready to be served to your browser. It's **blazingly fast**.
+
+And with the proper setup, your GitHub repo can act like a free and easy to use headless CMS.
 
 To do so, all my **blog posts** are written in the `/data/posts` folder and their content is scraped thanks to Node's `fs` module and `gray-matter`.
 
@@ -119,7 +125,7 @@ export const getPostData = async (slug: string) => {
 };
 ```
 
-The gray-matter module parses text files and separates meta data, written in YAML format at the top, and the main content of the file.
+The gray-matter module parses text files and separates meta data ( like the title, description, thumbnail of the page) and the main content of the file.
 
 These functions can then be reused in all pages to return the posts data stored in `/data/posts`.
 
@@ -135,10 +141,10 @@ For the **articles**, I chose **MDX** (which stands for Markdown + JSX) instead 
 
 ```md:./data/posts/how-to-build-a-portfolio.mdx
 ---
-  title: "How to build a portfolio"
-  slug: "how-to-build-a-portfolio"
+  title: "How to build a portfolio-with-next"
+  slug: "how-to-build-a-portfolio-with-next"
   date: "2022-09-02"
-  description: "Discover how I built my blog/portfolio."
+  description: "The thought process and technologies ..."
   image: "/static/blog/why-this-blog/blogging.png"
 ---
 
@@ -149,11 +155,22 @@ Building a personal project from scratch is hard ...
 
 You might notice the `about.mdx` file with the blog posts. It is the about section that is linked in the top navbar.
 
-Using **MDX** would allow me to make quicker edits to the page and still be able to use React components if needed.
+Using **MDX** would allow me to make quicker edits and still be able to use React components if needed.
 
 So I wanted **MDX** but without setting it up a second time or writing a new function to scrape the content of the about page.
 
 To work around this, I simply reused the **blog post** logic and hid some of the **blog** specific html blocks like reading time or date.
+
+```ts:./pages/blog/[slug].tsx
+   // If title is "About me" then the following html will not be used.
+   // This method is called short-circuiting
+
+    {title !== "About me" && (
+      <div className="flex justify-between text-greyDark dark:text-grey">
+        <div>Nabil-Y / {date}</div> <div>{readingTime}</div>
+      </div>
+    )}
+```
 
 ## The portfolio
 

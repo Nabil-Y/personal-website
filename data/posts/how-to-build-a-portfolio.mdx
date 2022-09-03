@@ -12,10 +12,10 @@
 
 Building a **personal project** from scratch is hard if you don't know where to start. I'll help by telling you my thought process behind this website's creation.
 
-First, define what you want to do. For this **portfolio**, there was two main use cases:
+First, define what you want to do. For this **portfolio**, there was two main use caes:
 
-1. Showcasing my **projects**
-1. Writing **blog articles**
+1. Showcase **projects**
+1. Write **blog articles**
 
 Each one has many sub-topics. How to show the **projects**? How to store the data ? What framework to use ? Can I add a like button ? Add a view count ? Should I use a CMS ? A self-hosted database ? Markdown ?
 
@@ -25,11 +25,11 @@ At first I was getting lost trying to figure out what to do or what to use, what
 const YAGNI = "Y'Aint Gonna Need It";
 ```
 
-Short. Clear. Us developpers tend to implement features or write code that we might need later.
+Short and clear. Us developpers tend to implement features or write code that we might need later.
 
-And more often than not, it ends up being unused. Makes us loose so much time.
+And more often than not, it ends up being unused. So much time is being wasted.
 
-That's where the **YAGNI** comes in. Only write code that you need **now**. Might seem counter-intuitive but it's very useful.
+That's where the **YAGNI** principle comes in. Only write code that you need **now**. Might seem counter-intuitive but it's very useful.
 
 Code a feature when you need it, not before. It saved me so much **time** to make a first version of this **portfolio**.
 
@@ -37,9 +37,11 @@ Code a feature when you need it, not before. It saved me so much **time** to mak
 
 Next comes the time to think about what technology is best suited for your **project**.
 
-Even before starting I knew I'd use TypeScript because it makes your code self-documented and way more reliable than JavaScript (Please use TypeScript).
+Even before starting I knew I'd use TypeScript because it makes your code self-documented and way more reliable than JavaScript.
 
 Also TailwindCSS just because I'm a big fan. It makes the styling part a pleasure with component frameworks like React.
+
+It may or may not be the main topic of a future blog post.
 
 ```js:./tailwind.config.js
 /** @type {import('tailwindcss').Config} */
@@ -73,17 +75,23 @@ module.exports = {
 
 ```
 
-For a blog, what comes to mind first is using a CMS. As I wanted to build something myself, the idea was quickly discarded.
+For a blog, what comes to mind first is using a CMS. As I wanted to build something myself, this was quickly discarded.
 
-The idea of a dedicated headless CMS was appealing but not selected. In the end, I chose **Next.js** for its Static Site Generation (SSG).
+The idea of using some dedicated headless CMS like Sanity or Strapi was appealing but I wanted to build something simple by myself...
 
-Also the blog will not be hosted on a blogging platform so I need SEO to expose my articles to search engines. **Next.js** has built in SEO tools so that's a big plus.
+Then I chose **Next.js** for its Static Site Generation (SSG) feature and the many optimisations it comes with.
+
+Also the **blog** will not be hosted on a blogging platform so I need SEO to expose my articles to search engines.
+
+**Next.js** has built in SEO tools so that's a big plus.
 
 ## The blog
 
-Static Site Generation is one of the most optimized way to create blogs because it's **blazingly fast** and the data doesn't change much. It makes your GitHub repo act like a free headless CMS.
+Static Site Generation is one of the most optimized way to create blogs because it's **blazingly fast** and the data doesn't change much.
 
-All my **blog posts** are written in the `/data/posts` folder and the content is scraped thanks to Node's `fs` module and `gray-matter`.
+With the proper setup, your GitHub repo can act like a free and easy to use headless CMS.
+
+To do so, all my **blog posts** are written in the `/data/posts` folder and their content is scraped thanks to Node's `fs` module and `gray-matter`.
 
 ```ts:./libs/posts.ts
 import fs from "fs";
@@ -111,13 +119,19 @@ export const getPostData = async (slug: string) => {
 };
 ```
 
-The gray-matter module allows to parse text files and separate meta data, written in a YAML format at the top, and the main content.
+The gray-matter module parses text files and separates meta data, written in YAML format at the top, and the main content of the file.
 
-For the **articles**, I chose **MDX** instead of simple markdown for three main reasons. First was to be able to use the built-in **Next.js** Image component to optimize automatically article images.
+These functions can then be reused in all pages to return the posts data stored in `/data/posts`.
 
-Second, I was curious about **MDX** and wanted to learn by using it in a **project**. The quickest way to understand new technologies.
+**Next.js** will use this dynamic page `/pages/blog/[slug].tsx` as a template and generate a static page for each file in the posts folder.
 
-Last reason was that I could import custom React components and make future articles more interactive (not really **YAGNI** but still, I learned a lot so it was worth it).
+For the **articles**, I chose **MDX** (which stands for Markdown + JSX) instead of simple markdown for three main reasons.
+
+- Be able to use the built-in **Next.js** Image component to optimize automatically article images.
+
+- I was curious about **MDX** and wanted to learn by using it in a **project**. (The quickest way to understand new technologies)
+
+- I could import custom React components and make future articles more interactive (not really **YAGNI** but still, I learned a lot so it's worth it).
 
 ```md:./data/posts/how-to-build-a-portfolio.mdx
 ---
@@ -133,11 +147,27 @@ Last reason was that I could import custom React components and make future arti
 Building a personal project from scratch is hard ...
 ```
 
+You might notice the `about.mdx` file with the blog posts. It is the about section that is linked in the top navbar.
+
+Using **MDX** would allow me to make quicker edits to the page and still be able to use React components if needed.
+
+So I wanted **MDX** but without setting it up a second time or writing a new function to scrape the content of the about page.
+
+To work around this, I simply reused the **blog post** logic and hid some of the **blog** specific html blocks like reading time or date.
+
 ## The portfolio
 
-For the **project**, I wanted something really simple and didn't want to spend a lot of time finding a solution to store it in a database or reuse the original scraping like the `fs module` so I opted for quickest solution.
+For the **projects** part, I wanted something very simple.
 
-Yes. A simple array. An easy method but one that will have limitations in readability when I have many, many projects. Still, It works great now so there is no need to overcomplicate things.
+Really had no desire to spend lots of time finding and implementing a storage solution.
+
+There were many options like a database, CMS or reusing the original scraping method of `fs module`.
+
+Instead I opted for a quick and easy one. Yes...
+
+A simple array. Easy and quick but this method can have limitations in readability when I have many, many projects.
+
+Still, It works great for now so there is no need to overcomplicate things.
 
 ```ts:./types/types.ts
 // Array of Project objects
@@ -152,20 +182,31 @@ interface Project {
 }
 ```
 
-The `description` and `imgLink` keys are optional so that I can reuse the component and omit them in the Home Page. Thinking about reusability is key in component framework.
+The `description` and `imgLink` keys are optional so I can reuse the component and omit them in the Home Page. Thinking about reusability is key in component frameworks.
+
+## How to start a new project
+
+In summary, here are the steps to quickstart your new **project**:
+
+1. Write the main use cases / user stories
+1. Choose the most adequate langages/frameworks/packages for said use cases
+1. Write a to do list of the minimum number of tasks to complete the project. Keep YAGNI in mind.
+1. Prepare some coffee (or your prefered drink) and start coding!
 
 ## Template
 
-As a contribution to open source, I built a template so that you can have your **blog / portfolio** like mine set up in just a few minutes.
+![Word cloud with "Open source" theme](/static/blog/how-to-build-a-portfolio/open-source.png)
+
+As a contribution to open source, I made a template so that you can build a **blog / portfolio** like this one in just a few minutes.
 
 Here are the links:
 
-1. [Template repository](https://github.com/Nabil-Y/portfolio-template)
-1. [Live Demo](https://portfolio-template-amber.vercel.app/)
+- [Template repository](https://github.com/Nabil-Y/portfolio-template)
+- [Live Demo](https://portfolio-template-amber.vercel.app/)
 
-To get started, follow the instructions in the repository's Readme. Please star the project if you found it helpful.
+To get started, follow the instructions in the repository's readme.
 
-![Word cloud with "Open source" theme](/static/blog/how-to-build-a-portfolio/open-source.png)
+**Please star the project** if you found it helpful!
 
 ## Follow me or send a message on
 

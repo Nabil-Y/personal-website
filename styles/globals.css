@@ -47,6 +47,14 @@
   }
 }
 
+.prose {
+  @apply text-sm sm:text-base;
+}
+
+.prose code {
+  @apply text-xs sm:text-sm;
+}
+
 a,
 input,
 button {

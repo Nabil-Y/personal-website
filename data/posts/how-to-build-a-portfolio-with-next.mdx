@@ -162,14 +162,14 @@ So I wanted **MDX** but without setting it up a second time or writing a new fun
 To work around this, I simply reused the **blog post** logic and hid some of the **blog** specific html blocks like reading time or date.
 
 ```ts:./pages/blog/[slug].tsx
-   // If title is "About me" then the following html will not be used.
-   // This method is called short-circuiting
+// If title is "About me" then the following html will not be used.
+// This method is called short-circuiting
 
-    {title !== "About me" && (
-      <div className="flex justify-between text-greyDark dark:text-grey">
-        <div>Nabil-Y / {date}</div> <div>{readingTime}</div>
-      </div>
-    )}
+{title !== "About me" && (
+  <div className="flex justify-between text-greyDark dark:text-grey">
+    <div>Nabil-Y / {date}</div> <div>{readingTime}</div>
+  </div>
+)}
 ```
 
 ## The portfolio

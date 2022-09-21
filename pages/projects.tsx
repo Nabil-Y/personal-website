@@ -19,7 +19,7 @@ const ProjectsPage = () => {
 
   return (
     <BaseContainer
-      title="Projects - Nabil Yassine"
+      title="Projects"
       description="Have a look at all my frontend web dev projects"
     >
       <h1>Projects</h1>

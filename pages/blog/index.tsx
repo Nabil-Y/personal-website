@@ -19,7 +19,7 @@ const BlogHomePage = (props: PostsProps) => {
 
   return (
     <BaseContainer
-      title="Blog - Nabil Yassine"
+      title="Blog"
       description="Here is my blog where I write about React, TypeScript, frontend and all things web dev"
     >
       <h1>Blog</h1>

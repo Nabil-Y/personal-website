@@ -12,7 +12,7 @@ const BlogPost = (props: BlogPostProps) => {
 
   return (
     <BaseContainer
-      title={`${title} – Nabil Yassine`}
+      title={title}
       description={description}
       image={image}
       date={new Date(date).toLocaleDateString()}
@@ -39,7 +39,7 @@ export const getStaticPaths: GetStaticPaths = () => {
   const paths = getAllPostsPaths();
   return {
     paths,
-    fallback: "blocking",
+    fallback: false,
   };
 };
 

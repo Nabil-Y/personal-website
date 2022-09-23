@@ -11,7 +11,7 @@ export const projectsData: Project[] = [
     tags: ["Next", "TypeScript", "MDX", "TailwindCSS"],
   },
   {
-    repoLink: "Nabil_Yassine_14_13062022",
+    repoLink: "https://github.com/Nabil-Y/Nabil_Yassine_14_13062022",
     demoLink: "https://nabil-yassine-14-13062022.vercel.app/",
     imgLink: "/static/projects/hrnet.jpg",
     title: "HRnet",
@@ -45,22 +45,5 @@ export const projectsData: Project[] = [
     description:
       "Made user stories, a kanban board and use case diagrams for a fictional tutoring app. Also made detailed mockups in Figma for desktop/mobile.",
     tags: ["Figma", "Agile methodologies", "Kanban", "User Stories"],
-  },
-  {
-    repoLink: "https://github.com/Nabil-Y/budget-app-next",
-    demoLink: "https://github.com/Nabil-Y/budget-app-next",
-    imgLink: "/static/projects/coming-soon.jpg",
-    title: "Budget App",
-    description:
-      "Work in progress. Free income/Expense tracker SaaS app. User Stories are done.",
-    tags: [
-      "Next",
-      "TypeScript",
-      "Redux",
-      "Jest",
-      "TailwindCSS",
-      "Google Firebase",
-      "SaaS",
-    ],
   },
 ];
